@@ -1,13 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash ,Blueprint ,session
+from flask import Flask, render_template, request, redirect, url_for, flash ,session
 import pyodbc
 import tensorflow as tf
 from tensorflow import keras
 from keras.models import load_model
 import pandas as pd
-import numpy as np
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from Blueprints.forgot_password import forgot_password_bp
 from flask_mail import Mail, Message
 import random
 import string
