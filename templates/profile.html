@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Job Recommendation</title>
+    <style>
+        .gradient-custom {
+          background: #6a11cb;
+          background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+          background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+          height: 93vh; /* Set the height to 100% of the viewport height */
+          margin: 0; /* Remove default margin */
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: #fff; /* Set text color to white */
+        }
+
+        nav {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: right;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+      </style>
+    <!-- Add any additional CSS stylesheets or libraries as needed -->
+</head>
+<body>
+    <nav class="navbar">
+        <h1><a href="{{ url_for('predict') }}" class="fw-bold mb-2 text-uppercase text-white">Job Recommendation</a></h1>
+        {% if session.logged_in %}
+            <li><a href="{{ url_for('profile') }}">{{ session.username }}</a> <a href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+        {% endif %}
+      </nav>
+      <section class="gradient-custom">
+        <div class="container">
+            <div class="row d-flex align-items justify-content-center h-100">
+                <div class="col-md-5">
+                    <form method="post" action="{{ url_for('edit_profile') }}">
+                        <label for="username">Gmail:</label>
+                        <input class="form-control" type="Gmail" name="username" value="{{ session.username }}" required readonly>
+                        <br>
+                        <label for="password">Password:</label>
+                        <input class="form-control" type="password" name="password" required>
+                        <br>
+                        <label for="name">Name:</label>
+                        <input class="form-control" type="text" name="name" value="{{ user.name }}" required>
+                        <br>
+                        <label for="lastname">Lastname:</label>
+                        <input class="form-control" type="text" name="lastname" value="{{ user.lastname }}" required>
+                        <br>
+                        <label for="phone">Phone:</label>
+                        <input class="form-control" type="text" name="phone" value="{{ user.phone }}" required>
+                        <br>
+                        <label for="address">Address:</label>
+                        <input class="form-control" type="text" name="address" value="{{ user.address }}" required>
+                        <br>
+
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        <p class="flash-messages">
+                        {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                        {% endfor %}
+                        </p>
+                        {% endif %}
+                        {% endwith %}
+                        <button class="btn btn-outline-light btn-lg px-5" type="submit">Save Changes</button>
+                    </form>
+                </div>
+                <div class="col-md-5">
+                    <div style="text-align:center;"">
+                        <img src="static/User_icon_2.svg.png" class="img-fluid" alt="Phone image" width="193" height="130" >
+                    </div>
+                    <h2>User Information</h2>
+                    <p>Name: {{ user.name }}</p>
+                    <p>Lastname: {{ user.lastname }}</p>
+                    <p>Phone: {{ user.phone }}</p>
+                    <p>Address: {{ user.address }}</p>
+                </div>
+            </div>
+            
+        
+        
+        </div>
+    </section>
+</body>
+</html>
