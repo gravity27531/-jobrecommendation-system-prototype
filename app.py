@@ -36,25 +36,6 @@ app.config['MAIL_USERNAME'] = 'tester27531@gmail.com'
 app.config['MAIL_PASSWORD'] = 'uzyt cfch xhgs jfnr'
 app.config['MAIL_DEFAULT_SENDER'] = 'tester27531@gmail.com'
 
-# @app.route('/home', methods=['GET'])
-# def home():
-#     # Create a connection and cursor
-#     conn = pyodbc.connect(connection_string)
-#     cursor = conn.cursor()
-
-#     # Fetch data from SQL Server
-#     cursor.execute('SELECT * FROM JobTable')
-#     data = cursor.fetchall()
-
-#     # Close the connection
-#     conn.close()
-
-#     # Get the search query from the form
-#     search_query = request.args.get('position_name')
-
-#     # Send data and search query to the HTML template
-#     return render_template('home.html', data=data, search_query=search_query)
-
 @app.route('/', methods=['GET','POST'])
 def index():
     if request.method == 'POST':
@@ -140,62 +121,6 @@ def Register():
     # If the request method is GET, simply render the register.html template with form_data
     return render_template('register.html', form_data=form_data)
 
-
-# @app.route('/predict', methods=['GET'])
-# def predict():
-#     # Get the search query from the user input
-#     search_query = request.args.get('search_query', '').strip()
-
-#     if not position_texts:
-#         # Handle the case where no data is found for the specified position
-#         prediction = "No data found for the specified position."
-#     else:
-#         if search_query:
-#             # Filter positions based on the search query
-#             filtered_positions = [position for position in position_texts if search_query.lower() in position.lower()]
-
-#             filtered_companies = data[data['position'].isin(filtered_positions)]['company'].tolist()
-
-#             if not filtered_positions:
-#                 # Handle the case where no positions match the search query
-#                 prediction = f"No matching positions found for '{search_query}'."
-#             else:
-#                 # Tokenize and convert text data to sequences
-#                 tokenizer.fit_on_texts(filtered_positions)
-#                 sequences = tokenizer.texts_to_sequences(filtered_positions)
-
-#                 # Pad sequences to have consistent length
-#                 padded_sequences = pad_sequences(sequences, maxlen=maxlen)
-
-#                 # Predict using the model
-#                 predictions = model.predict(padded_sequences)
-
-#                 # Extract the predicted scores for each position
-#                 scores = predictions.flatten()
-
-#                 # Combine positions with corresponding scores
-#                 position_companies_scores = list(zip(filtered_positions, filtered_companies, scores))
-
-#                 # Sort positions based on predicted scores
-#                 sorted_positions = sorted(position_companies_scores, key=lambda x: x[2], reverse=True)
-
-#                 # Select the top recommendations (adjust 'top_n' based on your preference)
-#                 top_n = 10
-#                 recommended_positions = sorted_positions[:top_n]
-
-#                 # Format recommendations for display
-#                 recommendation_text = "\n".join([f"{position} at {company}: {score}" for position, company, score in recommended_positions])
-
-#                 # Set the recommendation text
-#                 prediction = recommendation_text
-#         else:
-#             # If no search query, use all positions
-#             # (You can adjust this part based on your application logic)
-#             prediction = "Please enter a search query to get recommendations."
-
-#     # Send data, search query, and prediction to the HTML template
-#     return render_template('predict.html', prediction=prediction, search_query=search_query)
-
 @app.route('/predict', methods=['GET'])
 def predict():
     # Get the search query from the user input
@@ -260,38 +185,7 @@ def predict():
     # Send data, search query, and prediction to the HTML template
     return render_template('predict.html', prediction=prediction, search_query=search_query)
 
-# @app.route('/forgot_password', methods=['GET', 'POST'])
-# def forgot_password():
-#     if request.method == 'POST':
-#         username = request.form.get('username')
-#         new_password = request.form.get('New_password')
-#         confirm_password = request.form.get('Newconfirm_password')
-
-#         conn = pyodbc.connect(connection_string)
-#         cursor = conn.cursor()
-
-#         # Check if the username already exists in the UserTable
-#         cursor.execute('SELECT * FROM UserTable WHERE Username=?', (username))
-#         existing_user = cursor.fetchone()
-
-#         if existing_user:
-#             # Check if new password matches the confirmation
-#             if new_password == confirm_password:
-#                 # Update the user's password in the database
-#                 cursor.execute('UPDATE UserTable SET Password=? WHERE Username=?', (new_password, username))
-#                 conn.commit()
-
-#                 return redirect(url_for('index'))
-#             else:
-#                 return redirect(url_for('forgot_password'))
-#         else:
-#             return redirect(url_for('Register'))
-
-#         conn.close()
-
-#     return render_template('forgotpassword.html')
 mail = Mail(app)
-
 # In-memory storage for password reset tokens (you should use a database in production)
 password_reset_tokens = {}
 
@@ -406,33 +300,6 @@ def get_user_information(username):
         return user
     else:
         return None
-
-# @app.route('/edit_profile', methods=['POST'])
-# def edit_profile():
-#     if not session.get('logged_in'):
-#         return redirect(url_for('login'))
-
-#     # Get the new username and password from the form
-#     new_username = request.form.get('new_username')
-#     new_password = request.form.get('new_password')
-#     name = request.form.get('name')
-#     lastname = request.form.get('lastname')
-#     phone = request.form.get('phone')
-#     address = request.form.get('address')
-
-#     # Validate and update the user information
-#     if new_username and new_password and name and lastname and phone and address:
-#         # Update the session information (optional)
-#         session['username'] = new_username
-
-#         # Update the user information in the database or your data store
-#         update_user_information(session['username'], new_password, name, lastname, phone, address)
-
-#         flash('User information updated successfully.')
-#     else:
-#         flash('Please provide all required information.')
-
-#     return redirect(url_for('profile'))
     
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
@@ -479,7 +346,6 @@ def update_user_information(username, password, name, lastname, phone, address):
             '''
             cursor.execute(update_query, (password, name, lastname, phone, address, username))
             conn.commit()
-
 
 @app.route('/logout')
 def logout():
