@@ -12,7 +12,7 @@ import string
 
 app = Flask(__name__)
 
-app.secret_key = '1048'
+app.secret_key = '0000'
 # app.register_blueprint(forgot_password_bp, url_prefix='/')
 
 model = load_model('model.h5')
